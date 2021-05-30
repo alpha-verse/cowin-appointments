@@ -50,7 +50,7 @@
                     success: function (result, status, xhr) {
                         var table = $("<table id='appointments'><tr><th>Results</th></tr>");
                         let centerCount = 0;
-                        if (result["centers"]) {
+                        if (result["centers"] && result["centers"].length > 0) {
                             result["centers"].forEach(center => {
                                 centerCount++;
                                 table.append("<tr><td>-------------- </td><td>----------------</td></tr>");
@@ -75,6 +75,8 @@
                                 table.append("<tr><td>Sessions</td><td>"+ sessionTable  +"</td></tr>");
         
                             });
+                        } else {
+                            table.append("<tr><td>No data found in the system</td><td></td></tr>");
                         }
                      
                         table.append("</table>");
