@@ -76,6 +76,7 @@
                                   if (center.sessions ) {
                                     sessionCount++;
                                     center.sessions.forEach(session => {
+                                        sessionTable += "<tr><td>Availibility: </td><td style='color:red'>" + (session.available_capacity == 0 ? "Booked" : (session.available_capacity + " free slots")) + "</td></tr>";
                                         sessionTable += "<tr><td>Date: </td><td>" + session.date + "</td></tr>";
                                         sessionTable += "<tr><td>Vaccine: </td><td>" + session.vaccine + "</td></tr>";
                                         sessionTable += ("<tr><td>Min Age Limit: </td><td>" + session.min_age_limit + "</td></tr>");
