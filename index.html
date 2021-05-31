@@ -1,26 +1,34 @@
 <html>
 
 <head>
-     
+   <style>
+     .vertical-center {
+        min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+        min-height: 100vh; /* These two lines are counted as one :-)       */
+
+        display: flex;
+        align-items: center;
+      }
+   </style>  
 <!-- CSS only -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 </head>
 
 <body>
 
-   
+  <div class="jumbotron vertical-center"> 
     <div class="container">
-        <div class="row">
+        <div class="row align-middle">
           <div class="col">
             <div class="card">
                 <div class="card-header">
-                  See Available Vaccination Appointments
+                  See Available Vaccination Slots in next 7 days
                 </div>
                 <div class="card-body">
-                  <h5 class="card-title">Enter Pincode and Date</h5>
+                  <h5 class="card-title">Enter Pincode and Starting Date</h5>
                   <p class="card-text">
                     <input class="form-control" id="pin" type="text" placeholder="Pin Code" >
-                    <input class="form-control" id="date" type="text" placeholder="Date (format: 31-05-2021)" >
+                    <input class="form-control" id="date" type="text" placeholder="Date (format: 31-05-2021)"  >
                   </p>
                   <button  id ="submit" class="btn btn-primary">Check Results</button>
 
@@ -34,6 +42,7 @@
           </div>
         </div>
       </div>
+  </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
@@ -41,8 +50,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function () {
-       
-        $("#submit").click(function (e) {
+      let currentDate = new Date();
+      let dateStr = currentDate.getDate() + "-" + ("0" + (currentDate.getMonth() + 1)).slice(-2) + "-" + currentDate.getFullYear();
+      $("#date").val(dateStr);
+
+      $("#submit").click(function (e) {
                 $.ajax({
                     type: "GET",
                     url: "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=" + $("#pin").val() + "&date=" + $("#date").val() ,
@@ -64,6 +76,7 @@
                                   if (center.sessions ) {
                                     sessionCount++;
                                     center.sessions.forEach(session => {
+                                        sessionTable += "<tr><td>Date: </td><td>" + session.date + "</td></tr>";
                                         sessionTable += "<tr><td>Vaccine: </td><td>" + session.vaccine + "</td></tr>";
                                         sessionTable += ("<tr><td>Min Age Limit: </td><td>" + session.min_age_limit + "</td></tr>");
                                         sessionTable += "<tr><td>Slots: </td><td>" + (session.slots ? session.slots.join(",")  : "") + "</td></tr>";
@@ -84,7 +97,9 @@
                         $("#results").html(table);
                         $("table#appointments tr:even").css("background-color", "#F4F4F8");
                         $("table#appointments tr:odd").css("background-color", "#EFF1F1");
-        
+                        
+                    
+
                     },
                     error: function (xhr, status, error) {
                         // alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
